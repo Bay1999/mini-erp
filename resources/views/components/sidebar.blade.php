@@ -56,10 +56,12 @@
                          x-transition:leave-start="transform opacity-100 scale-100" 
                          x-transition:leave-end="transform opacity-0 scale-95">
                         
+                        @can('manage users')
                         <a href="{{ route('master.user.index') }}" 
                            class="group flex items-center gap-2 rounded-lg py-1.5 px-3 text-sm font-medium transition-all duration-150 {{ request()->routeIs('master.user.*') ? 'bg-cyan-100 text-cyan-950 font-semibold' : 'text-gray-500 hover:bg-cyan-100/30 hover:text-cyan-950' }}">
                             <span class="transition-colors duration-150 {{ request()->routeIs('master.user.*') ? 'text-cyan-950 font-medium' : 'text-gray-500 group-hover:text-cyan-950' }}">User</span>
                         </a>
+                        @endcan
                         
                         <a href="{{ route('master.item.index') }}" 
                            class="group flex items-center gap-2 rounded-lg py-1.5 px-3 text-sm font-medium transition-all duration-150 {{ request()->routeIs('master.item.*') ? 'bg-cyan-100 text-cyan-950 font-semibold' : 'text-gray-500 hover:bg-cyan-100/30 hover:text-cyan-950' }}">
@@ -96,7 +98,7 @@
             </div>
             <div class="min-w-0" x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>
                 <p class="text-sm font-semibold text-gray-900 truncate">{{ Auth::user()->name }}</p>
-                <p class="text-xs text-gray-500 truncate">Admin</p>
+                <p class="text-xs text-gray-500 truncate">{{ ucfirst(Auth::user()->roles->first()?->name ?? 'User') }}</p>
             </div>
         </div>
 

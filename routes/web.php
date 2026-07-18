@@ -19,16 +19,26 @@ Route::middleware('auth.user')->group(function () {
     Route::get('/dashboard/data', [DashboardController::class, 'data'])->name('dashboard.data');
 
     Route::prefix('master')->name('master.')->group(function () {
-        Route::get('user/data', [UserController::class, 'data'])->name('user.data');
-        Route::resource("user", UserController::class);
-        Route::get('item/data', [ItemController::class, 'data'])->name('item.data');
-        Route::resource("item", ItemController::class);
+        Route::middleware('can:manage users')->group(function() {
+            Route::get('user/data', [UserController::class, 'data'])->name('user.data');
+            Route::resource("user", UserController::class);
+        });
+
+        Route::middleware('can:manage items')->group(function() {
+            Route::get('item/data', [ItemController::class, 'data'])->name('item.data');
+            Route::resource("item", ItemController::class);
+        });
     });
 
-    Route::get('sales/data', [SalesController::class, 'data'])->name('sales.data');
-    Route::resource("sales", SalesController::class);
-    Route::get('payment/data', [PaymentController::class, 'data'])->name('payment.data');
-    Route::resource("payment", PaymentController::class);
+    Route::middleware('can:manage sales')->group(function() {
+        Route::get('sales/data', [SalesController::class, 'data'])->name('sales.data');
+        Route::resource("sales", SalesController::class);
+    });
+
+    Route::middleware('can:manage payments')->group(function() {
+        Route::get('payment/data', [PaymentController::class, 'data'])->name('payment.data');
+        Route::resource("payment", PaymentController::class);
+    });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

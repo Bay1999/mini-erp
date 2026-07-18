@@ -31,7 +31,7 @@ class UserService
     }
 
     public function indexDataTable() {
-        $query = $this->userRepository->query();
+        $query = $this->userRepository->query()->with('roles');
 
         return datatables()->of($query)
             ->addColumn('action', function($row){
@@ -63,10 +63,17 @@ class UserService
                         </div>
                     </div>';
             })
+            ->addColumn('role', function($row) {
+                $role = $row->roles->first();
+                if (!$role) return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border bg-gray-100 text-gray-800 border-gray-200">No Role</span>';
+                
+                $color = $role->name === 'admin' ? 'bg-cyan-100 text-cyan-800 border-cyan-200' : 'bg-amber-100 text-amber-800 border-amber-200';
+                return '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ' . $color . '">' . ucfirst($role->name) . '</span>';
+            })
             ->editColumn('created_at', function($row) {
                 return $row->created_at ? $row->created_at->format('M d, Y H:i') : '';
             })
-            ->rawColumns(['action', 'name', 'email_verified_at'])
+            ->rawColumns(['action', 'name', 'role', 'email_verified_at'])
             ->make(true);
     }
 
@@ -79,14 +86,22 @@ class UserService
 
         return [
             'breadcrumbs' => $breadcrumbs,
+            'roles' => \Spatie\Permission\Models\Role::all()
         ];
     }
 
     public function store(array $data) {
+        $roleName = $data['role'] ?? null;
+        unset($data['role']);
+
         if (!empty($data['password'])) {
             $data['password'] = bcrypt($data['password']);
         }
-        return $this->userRepository->create($data);
+        $user = $this->userRepository->create($data);
+        if ($roleName) {
+            $user->assignRole($roleName);
+        }
+        return $user;
     }
 
     public function edit(int $id) {
@@ -104,16 +119,28 @@ class UserService
         return [
             'breadcrumbs' => $breadcrumbs,
             'user' => $user,
+            'roles' => \Spatie\Permission\Models\Role::all()
         ];
     }
 
     public function update(int $id, array $data) {
+        $roleName = $data['role'] ?? null;
+        unset($data['role']);
+
         if (!empty($data['password'])) {
             $data['password'] = bcrypt($data['password']);
         } else {
             unset($data['password']);
         }
-        return $this->userRepository->update($id, $data);
+        
+        $user = $this->userRepository->find($id);
+        if ($user) {
+            $user->update($data);
+            if ($roleName) {
+                $user->syncRoles([$roleName]);
+            }
+        }
+        return $user;
     }
 
     public function delete(int $id) {

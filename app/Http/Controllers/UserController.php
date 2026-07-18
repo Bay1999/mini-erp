@@ -51,6 +51,7 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:6|confirmed',
+                'role' => 'required|string|exists:roles,name',
             ]);
 
             $user = $this->userService->store($validated);
@@ -96,6 +97,7 @@ class UserController extends Controller
             $rules = [
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+                'role' => 'required|string|exists:roles,name',
             ];
 
             $newPassword = $request->input('password');

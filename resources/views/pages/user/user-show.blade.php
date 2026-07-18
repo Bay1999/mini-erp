@@ -37,6 +37,22 @@
                 </div>
 
                 <div class="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <span class="text-sm font-medium text-gray-500">Role</span>
+                    @php
+                        $role = $user->roles->first();
+                    @endphp
+                    @if($role)
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border {{ $role->name === 'admin' ? 'bg-cyan-100 text-cyan-800 border-cyan-200' : 'bg-amber-100 text-amber-800 border-amber-200' }}">
+                            {{ ucfirst($role->name) }}
+                        </span>
+                    @else
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border bg-gray-100 text-gray-800 border-gray-200">
+                            No Role
+                        </span>
+                    @endif
+                </div>
+
+                <div class="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <span class="text-sm font-medium text-gray-500">Joined Date</span>
                     <span class="text-sm font-semibold text-gray-900">{{ $user->created_at->setTimezone('Asia/Jakarta')->format('d M Y, H:i') }} WIB</span>
                 </div>

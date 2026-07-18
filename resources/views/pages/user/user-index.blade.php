@@ -20,11 +20,12 @@
                 <x-datatable 
                     id="users-table" 
                     :url="route('master.user.data')" 
-                    :headers="['ID', 'User', 'Email', 'Created At', 'Actions']"
+                    :headers="['ID', 'User', 'Email', 'Role', 'Created At', 'Actions']"
                     :columns="[
                         ['data' => 'id', 'name' => 'id'],
                         ['data' => 'name', 'name' => 'name'],
                         ['data' => 'email', 'name' => 'email'],
+                        ['data' => 'role', 'name' => 'role', 'orderable' => false, 'searchable' => false],
                         ['data' => 'created_at', 'name' => 'created_at'],
                         ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false]
                     ]"

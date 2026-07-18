@@ -32,6 +32,19 @@
                     <span class="text-xs text-rose-500 mt-1 hidden" id="error-email"></span>
                 </div>
 
+                <div>
+                    <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                    <select name="role" id="role" required class="mt-1 block w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-150">
+                        <option value="" disabled {{ !isset($user) ? 'selected' : '' }}>-- Select Role --</option>
+                        @foreach($roles as $role)
+                            <option value="{{ $role->name }}" {{ (old('role', isset($user) ? $user->roles->first()?->name : '')) === $role->name ? 'selected' : '' }}>
+                                {{ ucfirst($role->name) }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <span class="text-xs text-rose-500 mt-1 hidden" id="error-role"></span>
+                </div>
+
                 @if(isset($user))
                     <div>
                         <label for="current_password" class="block text-sm font-medium text-gray-700">Current Password</label>
