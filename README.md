@@ -38,8 +38,8 @@ A lightweight web-based Enterprise Resource Planning (ERP) application built wit
 ---
 
 ## Tech Stack
-- **Framework**: Laravel 11
-- **Database**: MySQL / PostgreSQL
+- **Framework**: Laravel 13
+- **Database**: MySQL / PostgreSQL / MariaDB
 - **Frontend Core**: Tailwind CSS (for modern UI styling), Alpine.js
 - **Frontend Libraries**:
   - jQuery 3.7 & DataTables
